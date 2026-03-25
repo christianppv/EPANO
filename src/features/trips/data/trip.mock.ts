@@ -8,6 +8,8 @@ export const MOCK_TRIPS: Trip[] = [
     startDate: '2026-07-10',
     endDate: '2026-07-16',
     memberCount: 5,
+    status: 'confirmed',
+    accentColor: '#4F46E5',
   },
   {
     id: '2',
@@ -16,5 +18,17 @@ export const MOCK_TRIPS: Trip[] = [
     startDate: '2026-04-03',
     endDate: '2026-04-06',
     memberCount: 4,
+    status: 'planning',
+    accentColor: '#F5A623',
+  },
+  {
+    id: '3',
+    title: 'Herbstwochenende',
+    destination: 'Amsterdam',
+    startDate: '2026-10-09',
+    endDate: '2026-10-12',
+    memberCount: 6,
+    status: 'planning',
+    accentColor: '#22C55E',
   },
 ];

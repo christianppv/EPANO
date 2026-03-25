@@ -1,8 +1,12 @@
+export type TripStatus = 'planning' | 'confirmed' | 'completed';
+
 export type Trip = {
-    id: string;
-    title: string;
-    destination: string;
-    startDate: string;
-    endDate: string;
-    memberCount: number;
-  };
+  id: string;
+  title: string;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  memberCount: number;
+  status: TripStatus;
+  accentColor: string;
+};
