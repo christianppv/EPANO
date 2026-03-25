@@ -1,0 +1,14 @@
+---
+description: Feature architecture rules
+globs:
+  - "src/features/**/*.ts"
+  - "src/features/**/*.tsx"
+alwaysApply: false
+---
+
+Feature rules:
+- Keep each feature self-contained
+- Co-locate hooks, schemas, types, and api helpers
+- Prefer small hooks and focused modules
+- Avoid unnecessary cross-feature coupling
+- Shared code belongs in src/lib or src/components

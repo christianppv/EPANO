@@ -1,0 +1,33 @@
+{
+    "project": "EPANO",
+    "description": "API and domain contract starter document for the EPANO Expo app.",
+    "status": "draft",
+    "entities": {
+      "User": {
+        "fields": ["id", "email", "displayName", "createdAt"]
+      },
+      "Trip": {
+        "fields": ["id", "title", "description", "startDate", "endDate", "createdBy", "createdAt"]
+      },
+      "TripMember": {
+        "fields": ["id", "tripId", "userId", "role", "joinedAt"]
+      },
+      "Suggestion": {
+        "fields": ["id", "tripId", "authorId", "type", "title", "notes", "createdAt"]
+      },
+      "Vote": {
+        "fields": ["id", "tripId", "suggestionId", "userId", "value", "createdAt"]
+      },
+      "ExpenseItem": {
+        "fields": ["id", "tripId", "title", "amount", "currency", "createdBy", "createdAt"]
+      },
+      "ItineraryItem": {
+        "fields": ["id", "tripId", "title", "date", "time", "notes", "createdBy", "createdAt"]
+      }
+    },
+    "notes": [
+      "This file should evolve into a real backend/domain contract document.",
+      "Keep field naming consistent with TypeScript domain models.",
+      "Do not add fields casually without product justification."
+    ]
+  }

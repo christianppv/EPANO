@@ -1,0 +1,22 @@
+---
+description: Global rules for the EPANO repo
+globs:
+alwaysApply: true
+---
+
+You are working on EPANO, a mobile-first group travel planning app built with Expo.
+
+Core priorities:
+1. Keep the codebase readable for one founder
+2. Prefer simple patterns over clever abstractions
+3. Keep business logic out of route files
+4. Reuse existing patterns before creating new ones
+5. Update docs when architecture changes
+6. Preserve Expo compatibility
+
+Before making changes, check:
+- Is there already a similar implementation in the repo?
+- Is this file in the correct folder?
+- Is the naming domain-driven and boring?
+- Is this introducing unnecessary complexity?
+- Is this still Expo-first?

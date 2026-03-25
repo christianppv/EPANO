@@ -1,50 +1,69 @@
-# Welcome to your Expo app 👋
+# EPANO
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+EPANO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript.
 
-## Get started
+## Goal
+EPANO helps groups of friends plan trips together with less chaos, less indecision, and less messy chat coordination.
 
-1. Install dependencies
+## Core MVP
+The MVP focuses on lightweight group trip coordination:
+- create a trip
+- invite friends
+- collect trip suggestions
+- vote on ideas
+- estimate shared expenses
+- create a simple itinerary
 
-   ```bash
-   npm install
-   ```
+## What EPANO is not
+EPANO is not:
+- a booking engine
+- a flight or hotel comparison tool
+- a public travel social network
+- a full AI travel concierge in the MVP
 
-2. Start the app
+## Stack
+- Expo
+- React Native
+- TypeScript
+- Expo Router
 
-   ```bash
-   npx expo start
-   ```
+## Architecture principles
+- Expo-first workflow
+- thin route files in `app/`
+- business logic in `src/features`
+- reusable UI in `src/components/ui`
+- shared helpers in `src/lib`
+- simple patterns over clever abstractions
+- keep the repo readable for a solo founder
 
-In the output, you'll find options to open the app in a
+## Repo structure
+- `app/` contains Expo Router route files and screen composition
+- `src/features/` contains domain logic
+- `src/components/` contains reusable components
+- `src/lib/` contains shared utilities and helpers
+- `docs/` contains product and architecture source-of-truth documentation
+- `.cursor/rules/` contains Cursor project rules
+- `.claude/agents/` contains Claude Code subagents
+- `AGENTS.md` contains repo instructions for coding agents
+- `CLAUDE.md` contains Claude project memory and working style
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Working rules
+Before making major changes:
+1. read `README.md`
+2. read `AGENTS.md`
+3. read `CLAUDE.md`
+4. read the most relevant file in `docs/`
+5. inspect the nearest existing implementation pattern
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Product focus
+The main problem EPANO solves is group coordination friction:
+- too many chat messages
+- unclear decisions
+- missing structure
+- lost context
+- vague expense expectations
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Expo-first rule
+This project should remain compatible with the Expo workflow for as long as possible.
+Prefer Expo-compatible libraries and Expo APIs before considering custom native solutions.
+Do not introduce native complexity casually.

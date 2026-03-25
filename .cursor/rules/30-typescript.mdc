@@ -1,0 +1,15 @@
+---
+description: TypeScript quality rules
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+TypeScript rules:
+- Avoid any
+- Prefer narrow types over broad objects
+- Use explicit domain types for core entities
+- Validate external input before trusting it
+- Keep types close to the feature when feature-specific
+- Put only truly shared types in shared locations

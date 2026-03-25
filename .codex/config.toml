@@ -1,0 +1,19 @@
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+project_root_markers = [".git"]
+
+[profiles.plan]
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+[profiles.implement]
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[profiles.review]
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "read-only"

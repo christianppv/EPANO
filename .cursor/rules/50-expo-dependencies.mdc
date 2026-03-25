@@ -1,0 +1,12 @@
+---
+description: Expo-first dependency rules
+globs:
+alwaysApply: true
+---
+
+Dependency rules:
+- Prefer Expo SDK capabilities first
+- Prefer libraries compatible with Expo and EAS Build
+- Avoid unnecessary native modules
+- Do not recommend bare React Native setup unless justified
+- Preserve a clean Expo workflow for as long as possible

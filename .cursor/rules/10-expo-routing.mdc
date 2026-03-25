@@ -1,0 +1,15 @@
+---
+description: Expo Router rules for route files
+globs:
+  - "app/**/*.ts"
+  - "app/**/*.tsx"
+alwaysApply: false
+---
+
+Rules for Expo route files:
+- Route files should stay thin
+- Avoid API logic inside route files
+- Avoid large inline components
+- Import hooks and business logic from src/features
+- Keep screen-level composition here, not domain logic
+- Prefer Expo Router conventions over custom routing abstractions

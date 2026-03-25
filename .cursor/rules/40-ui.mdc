@@ -1,0 +1,14 @@
+---
+description: Shared UI and component rules
+globs:
+  - "src/components/**/*.ts"
+  - "src/components/**/*.tsx"
+alwaysApply: false
+---
+
+UI rules:
+- Prefer reusable primitives in src/components/ui
+- Keep components small and composable
+- Avoid mixing presentational concerns with business logic
+- Do not create duplicate button, card, modal, or input patterns
+- Keep the mobile UX simple and clear
