@@ -1,96 +1,94 @@
 # AGENTS.md
 
 ## Project
-EPANO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript.
+
+ENAPO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript. Backend: Supabase (PostgreSQL + Auth + Realtime + Edge Functions).
 
 ## Mission
-Help groups plan trips together without chaos, unclear responsibilities, or endless chat indecision.
 
-## Product scope
-The MVP includes:
-- authentication
-- trip creation
-- inviting members
-- collecting suggestions
-- voting
-- rough expense planning
-- simple itinerary planning
+Help groups plan trips together by turning chaotically shared travel links into structured, votable options and clear group decisions.
 
-The MVP excludes:
-- flight booking
-- hotel booking
-- payment processing
-- public social feed
-- advanced AI concierge flows
-- heavy native customization
+## Core Loop
 
-## Core architecture rules
-- Use Expo-first solutions whenever possible.
-- Use Expo Router for routing.
-- Keep files in `app/` thin and focused on route composition and screen rendering.
-- Put business logic in `src/features`.
-- Put reusable UI primitives in `src/components/ui`.
-- Put shared helpers in `src/lib`.
-- Keep domain logic close to the feature it belongs to.
-- Avoid duplicate domain types across features.
+Every feature must serve this loop: Create trip → Invite group → Share links → Compare & vote → Make decision visible.
+
+## Product scope (v1 MVP)
+
+Included: authentication (Supabase Auth), trip creation, inviting members (share link), collecting options (link parsing), voting (polls), decision board.
+
+Excluded: flight/hotel booking, payment processing, cost splitting, public social feed, AI concierge, itinerary planning, full in-app chat, heavy native customization.
+
+## Architecture rules
+
+- Expo-first solutions always
+- Expo Router for routing
+- Keep files in `app/` thin (route composition only)
+- Business logic in `src/features/`
+- Reusable UI in `src/components/ui/`
+- Shared helpers in `src/lib/`
+- Domain logic close to its feature
+- Zustand for global state, TanStack Query for server state
+- Supabase for backend (Auth, DB, Realtime, Edge Functions)
+- RLS on every table
+
+## Database
+
+Core tables: users, trips, trip_members, options, polls, poll_options, votes, comments. All with Row Level Security. See CLAUDE.md for full schema.
+
+## Design System
+
+Liquid Glass: translucent cards with backdrop-blur, warm off-white background, teal primary (#1A9E8F), coral accent (#E8734A). See CLAUDE.md for full design tokens.
 
 ## Expo rules
-- Prefer Expo SDK capabilities before third-party native-heavy libraries.
-- Prefer libraries that are compatible with Expo and EAS Build.
-- Do not recommend or introduce bare React Native patterns unless there is a strong reason.
-- Treat native escalation as an exception, not the default.
 
-## State rules
-- Remote data should live in feature-level hooks and service/api layers.
-- Local UI state should live in local stores only when needed.
-- Do not introduce multiple competing state patterns without strong justification.
-
-## Dependency rules
-- Do not add a dependency unless it solves a real problem.
-- Prefer existing Expo/platform capabilities first.
-- Explain why any new dependency is needed.
-- Avoid libraries that create unnecessary native complexity.
+- Prefer Expo SDK capabilities before third-party native libraries
+- Prefer Expo-compatible packages
+- Do not introduce bare React Native patterns without strong reason
+- Keep EAS Build compatibility
 
 ## TypeScript rules
-- Use strict TypeScript.
-- Avoid `any` unless there is no realistic alternative.
-- Prefer explicit domain types.
-- Validate external input before trusting it.
-- Keep types narrow and boring.
+
+- Strict mode, no `any`
+- Explicit domain types
+- Validate external input
+- Types in src/types/ for shared, in feature folders for feature-specific
 
 ## Code style
-- Prefer simple code over clever code.
-- Prefer consistency over novelty.
-- Keep functions small.
-- Name files and symbols by domain meaning.
-- Reuse the nearest existing pattern before inventing a new one.
 
-## File placement rules
-- Routes and screens go in `app/`
-- Shared UI goes in `src/components/ui`
-- Shared app components go in `src/components/common`
-- Feature-specific code goes in `src/features/<feature>`
-- Global utilities go in `src/lib`
-- Backend/service wrappers go in `src/services`
-- Architecture and product decisions go in `docs/`
+- Simple over clever, consistent over novel
+- Keep functions small
+- Name by domain meaning
+- Reuse nearest existing pattern
+- kebab-case files, PascalCase components, camelCase hooks
+
+## File placement
+
+- Routes: `app/`
+- UI primitives: `src/components/ui/`
+- Feature components: `src/components/<domain>/`
+- Feature logic: `src/features/<domain>/`
+- Shared hooks: `src/hooks/`
+- Stores: `src/stores/`
+- Utilities: `src/lib/`
+- Services: `src/services/`
+- Types: `src/types/`
+- Design tokens: `src/constants/tokens.ts`
+- Docs: `docs/`
 
 ## Done criteria
-A task is not done unless:
-1. the code works
-2. the code compiles
-3. types remain correct
-4. no dead code is left behind
-5. the nearest existing pattern was respected
-6. docs are updated if structure or architecture changed
+
+1. Code works and compiles
+2. Types correct (no `any`)
+3. No dead code left
+4. Existing patterns respected
+5. Graceful degradation for link parsing
+6. Analytics events tracked (if core loop feature)
+7. Docs updated if structure changed
 
 ## Agent behavior
-Before major edits:
-- read `README.md`
-- read `CLAUDE.md`
-- read the most relevant docs file
-- inspect the nearest existing implementation
 
-When uncertain:
-- choose the simpler solution
-- keep Expo compatibility
-- keep the repo founder-readable
+Before major edits: read CLAUDE.md, inspect nearest implementation. When uncertain: choose simpler solution, keep Expo compatibility, keep it founder-readable.
+
+## Key reference
+
+CLAUDE.md is the Single Source of Truth. It contains: tech stack, database schema, design system, analytics events, sprint plan, coding conventions, and performance targets.

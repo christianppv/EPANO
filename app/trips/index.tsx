@@ -1,10 +1,10 @@
-import { router } from 'expo-router';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { TripList } from '@/features/trips/components/trip-list';
 import { useTrips } from '@/features/trips/hooks/useTrips';
 import { Trip } from '@/features/trips/types/trip.types';
 import { colors, spacing, typography } from '@/theme';
+import { router } from 'expo-router';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TripsScreen() {
   const { trips, isLoading, error } = useTrips();

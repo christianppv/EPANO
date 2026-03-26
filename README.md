@@ -1,69 +1,39 @@
-# EPANO
+# ENAPO
 
-EPANO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript.
+**Where groups decide.** A mobile-first group travel planning app that turns chaotic link sharing into structured group decisions.
 
-## Goal
-EPANO helps groups of friends plan trips together with less chaos, less indecision, and less messy chat coordination.
+## The Problem
 
-## Core MVP
-The MVP focuses on lightweight group trip coordination:
-- create a trip
-- invite friends
-- collect trip suggestions
-- vote on ideas
-- estimate shared expenses
-- create a simple itinerary
+Friends planning trips together use WhatsApp to share links and try to agree. Links get lost, decisions drag on, one person does all the work.
 
-## What EPANO is not
-EPANO is not:
-- a booking engine
-- a flight or hotel comparison tool
-- a public travel social network
-- a full AI travel concierge in the MVP
+## Core Loop
+
+1. **Create trip** – Name it, done (< 10 seconds)
+2. **Invite friends** – Share link, no app install needed
+3. **Share links** – Paste URL → auto-structured option card
+4. **Vote** – Swipe/tap to vote, live results
+5. **Decide** – Decision Board shows what's settled
 
 ## Stack
-- Expo
-- React Native
-- TypeScript
-- Expo Router
 
-## Architecture principles
-- Expo-first workflow
-- thin route files in `app/`
-- business logic in `src/features`
-- reusable UI in `src/components/ui`
-- shared helpers in `src/lib`
-- simple patterns over clever abstractions
-- keep the repo readable for a solo founder
+- **App:** Expo (React Native) + TypeScript + Expo Router
+- **Backend:** Supabase (PostgreSQL, Auth, Realtime, Edge Functions)
+- **State:** Zustand (global) + React Query (server)
 
-## Repo structure
-- `app/` contains Expo Router route files and screen composition
-- `src/features/` contains domain logic
-- `src/components/` contains reusable components
-- `src/lib/` contains shared utilities and helpers
-- `docs/` contains product and architecture source-of-truth documentation
-- `.cursor/rules/` contains Cursor project rules
-- `.claude/agents/` contains Claude Code subagents
-- `AGENTS.md` contains repo instructions for coding agents
-- `CLAUDE.md` contains Claude project memory and working style
+## Getting Started
 
-## Working rules
-Before making major changes:
-1. read `README.md`
-2. read `AGENTS.md`
-3. read `CLAUDE.md`
-4. read the most relevant file in `docs/`
-5. inspect the nearest existing implementation pattern
+```bash
+npm install
+cp .env.example .env    # Fill in Supabase credentials
+npx supabase start
+npx supabase db reset
+npx expo start
+```
 
-## Product focus
-The main problem EPANO solves is group coordination friction:
-- too many chat messages
-- unclear decisions
-- missing structure
-- lost context
-- vague expense expectations
+## AI-Assisted Development
 
-## Expo-first rule
-This project should remain compatible with the Expo workflow for as long as possible.
-Prefer Expo-compatible libraries and Expo APIs before considering custom native solutions.
-Do not introduce native complexity casually.
+- **CLAUDE.md** – Project context for Claude Code
+- **AGENTS.md** – Instructions for all coding agents
+- `.claude/skills/` – Auto-triggered patterns
+- `.claude/commands/` – Slash commands (/new-screen, /validate-loop)
+- `.claude/agents/` – Specialized subagents
