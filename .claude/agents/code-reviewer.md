@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Reviews code against ENAPO conventions, design system, and Lean Startup principles
+description: Reviews code against EPANO conventions, design system, and Lean Startup principles
 model: claude-sonnet-4-6
 allowed-tools: Read, Grep, Glob
 ---

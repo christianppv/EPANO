@@ -2,7 +2,7 @@
 name: supabase-migration
 description: Creates Supabase database migrations with RLS policies, indexes, and type generation. Use when modifying the database schema.
 ---
-When creating Supabase migrations for ENAPO:
+When creating Supabase migrations for EPANO:
 1. Run: supabase migration new <descriptive-name>
 2. snake_case tables (plural), singular_id for foreign keys
 3. Always add created_at timestamptz default now()

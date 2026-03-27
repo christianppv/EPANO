@@ -1,11 +1,11 @@
 ---
 name: test-writer
-description: Writes tests for ENAPO core loop features
+description: Writes tests for EPANO core loop features
 model: claude-sonnet-4-6
 allowed-tools: Read, Write, Bash
 ---
 
-Write tests for ENAPO. Priorities:
+Write tests for EPANO. Priorities:
 1. Core loop: trip → invite → link → vote → decide
 2. Graceful degradation: broken links, missing OG data, partial parse
 3. Edge cases: empty trips, offline, simultaneous votes, 20+ options

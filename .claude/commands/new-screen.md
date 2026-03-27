@@ -1,9 +1,9 @@
 ---
-description: Scaffold a new screen for the ENAPO mobile app
+description: Scaffold a new screen for the EPANO mobile app
 argument-hint: [screen-name]
 ---
 
-Create a new screen called $ARGUMENTS for the ENAPO mobile app:
+Create a new screen called $ARGUMENTS for the EPANO mobile app:
 
 1. Create the route file in app/ following Expo Router conventions (thin, composing only)
 2. Create the screen component in src/components/ following the rn-component skill

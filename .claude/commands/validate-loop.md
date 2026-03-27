@@ -1,9 +1,9 @@
 ---
-description: Check if ENAPO's core loop works end-to-end
+description: Check if EPANO's core loop works end-to-end
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
-Validate ENAPO's core loop integrity:
+Validate EPANO's core loop integrity:
 
 1. Trip Creation – screen exists, compiles, connects to Supabase
 2. Invite Flow – invite link generation, deep-link handling

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTripById } from '@/features/trips/hooks/useTrips';
 import { colors, spacing, typography } from '@/theme';
@@ -46,6 +46,19 @@ export default function TripDetailScreen() {
             </Text>
           )}
         </View>
+        {trip && (
+          <Pressable
+            onPress={() =>
+              Share.share({
+                message: `Tritt unserer Reise bei! Code: ${trip.inviteCode}\nLink: https://epano.app/join/${trip.inviteCode}`,
+              })
+            }
+            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1, marginLeft: spacing.md })}
+            hitSlop={12}
+          >
+            <Ionicons name="share-outline" size={22} color={colors.text} />
+          </Pressable>
+        )}
       </View>
 
       {/* Sections */}

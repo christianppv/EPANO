@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════
--- ENAPO Development Seed Data
+-- EPANO Development Seed Data
 -- Run with: npx supabase db reset (applies migrations + seed)
 -- ═══════════════════════════════════════════════════
 

@@ -1,5 +1,5 @@
 /**
- * ENAPO Design System – Liquid Glass Tokens
+ * EPANO Design System – Liquid Glass Tokens
  * Single source of truth for all visual constants.
  * Import from here, never hardcode colors or spacing.
  */

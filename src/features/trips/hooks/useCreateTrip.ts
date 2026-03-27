@@ -1,32 +1,45 @@
-import { addTrip, getTrips } from '../store/trips.store';
+import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import { useAuthStore } from '@/stores/use-auth-store';
 import { CreateTripInput } from '../types/create-trip.input';
 import { Trip } from '../types/trip.types';
-import { defaultEndDate, defaultStartDate, parseGermanDate } from '../utils/parse-date-input';
+import { dbTripToTrip } from '../utils/map-trip';
+import { parseGermanDate } from '../utils/parse-date-input';
 
-const ACCENT_PALETTE = ['#4F46E5', '#F5A623', '#22C55E', '#EF4444', '#8B5CF6', '#0EA5E9'];
+export function useCreateTrip(): { createTrip: (input: CreateTripInput) => Promise<Trip> } {
+  const user = useAuthStore((s) => s.user);
+  const queryClient = useQueryClient();
 
-export function useCreateTrip(): { createTrip: (input: CreateTripInput) => Trip } {
-  function createTrip(input: CreateTripInput): Trip {
-    const startIso =
-      (input.startDate ? parseGermanDate(input.startDate) : null) ?? defaultStartDate();
-    const endIso =
-      (input.endDate ? parseGermanDate(input.endDate) : null) ?? defaultEndDate(startIso);
+  async function createTrip(input: CreateTripInput): Promise<Trip> {
+    if (!user) throw new Error('Not authenticated');
 
-    const accentColor = ACCENT_PALETTE[getTrips().length % ACCENT_PALETTE.length];
+    const startIso = input.startDate ? parseGermanDate(input.startDate) : null;
+    const endIso = input.endDate ? parseGermanDate(input.endDate) : null;
 
-    const trip: Trip = {
-      id: Date.now().toString(),
-      title: input.title.trim(),
-      destination: input.destination.trim(),
-      startDate: startIso,
-      endDate: endIso,
-      memberCount: input.memberCount,
-      status: 'planning',
-      accentColor,
-    };
+    const { data: row, error } = await supabase
+      .from('trips')
+      .insert({
+        name: input.title.trim(),
+        destination: input.destination.trim(),
+        date_from: startIso,
+        date_to: endIso,
+        planned_members: input.memberCount,
+        created_by: user.id,
+        status: 'planning',
+      })
+      .select()
+      .single();
 
-    addTrip(trip);
-    return trip;
+    if (error) throw error;
+
+    await supabase.from('trip_members').insert({
+      trip_id: row.id,
+      user_id: user.id,
+      role: 'organizer',
+    });
+
+    await queryClient.invalidateQueries({ queryKey: ['trips'] });
+    return dbTripToTrip(row);
   }
 
   return { createTrip };

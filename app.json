@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "ENAPO",
-    "slug": "enapo",
+    "name": "EPANO",
+    "slug": "epano",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "epano",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.epano.app"
     },
     "android": {
       "edgeToEdgeEnabled": true,
@@ -19,6 +20,8 @@
     },
     "plugins": [
       "expo-router",
+      "expo-apple-authentication",
+      "expo-web-browser",
       [
         "expo-splash-screen",
         {

@@ -26,6 +26,7 @@ export default function CreateTripScreen() {
   const [memberCount, setMemberCount] = useState(2);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   function validate(): boolean {
     const next: FormErrors = {};
@@ -47,15 +48,17 @@ export default function CreateTripScreen() {
     return Object.keys(next).length === 0;
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!validate()) return;
     setSubmitting(true);
-
-    // Brief visual beat before navigating — makes the action feel intentional.
-    setTimeout(() => {
-      createTrip({ destination, title, startDate: startDate || undefined, endDate: endDate || undefined, memberCount });
-      router.replace('/trips');
-    }, 120);
+    setSubmitError(null);
+    try {
+      const trip = await createTrip({ destination, title, startDate: startDate || undefined, endDate: endDate || undefined, memberCount });
+      router.replace(`/trips/${trip.id}`);
+    } catch {
+      setSubmitError('Reise konnte nicht erstellt werden. Bitte erneut versuchen.');
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -199,6 +202,11 @@ export default function CreateTripScreen() {
             backgroundColor: colors.background,
           }}
         >
+          {submitError && (
+            <Text style={{ ...typography.caption, color: '#EF4444', textAlign: 'center', marginBottom: spacing.sm }}>
+              {submitError}
+            </Text>
+          )}
           <Pressable
             onPress={handleSubmit}
             style={({ pressed }) => ({

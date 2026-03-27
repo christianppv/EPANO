@@ -9,6 +9,7 @@ export const MOCK_TRIPS: Trip[] = [
     endDate: '2026-07-16',
     memberCount: 5,
     status: 'confirmed',
+    inviteCode: 'mock0001',
     accentColor: '#4F46E5',
   },
   {
@@ -19,6 +20,7 @@ export const MOCK_TRIPS: Trip[] = [
     endDate: '2026-04-06',
     memberCount: 4,
     status: 'planning',
+    inviteCode: 'mock0002',
     accentColor: '#F5A623',
   },
   {
@@ -29,6 +31,7 @@ export const MOCK_TRIPS: Trip[] = [
     endDate: '2026-10-12',
     memberCount: 6,
     status: 'planning',
+    inviteCode: 'mock0003',
     accentColor: '#22C55E',
   },
 ];

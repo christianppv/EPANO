@@ -3,7 +3,7 @@ description: Show current sprint progress and blockers
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
-Analyze current state of the ENAPO project:
+Analyze current state of the EPANO project:
 
 1. Read CLAUDE.md for sprint plan and current focus
 2. Check git log --oneline -20 for recent commits

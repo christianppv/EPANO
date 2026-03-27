@@ -8,5 +8,6 @@ export type Trip = {
   endDate: string;
   memberCount: number;
   status: TripStatus;
+  inviteCode: string;
   accentColor: string;
 };

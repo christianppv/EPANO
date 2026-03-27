@@ -1,4 +1,4 @@
--- ENAPO Core Schema
+-- EPANO Core Schema
 -- Migration: 001_initial_schema
 
 -- Enable required extensions

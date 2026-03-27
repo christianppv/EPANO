@@ -1,4 +1,4 @@
-# ENAPO
+# EPANO
 
 **Where groups decide.** A mobile-first group travel planning app that turns chaotic link sharing into structured group decisions.
 

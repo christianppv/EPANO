@@ -1,8 +1,8 @@
 /**
- * ENAPO Link Parser – Supabase Edge Function
+ * EPANO Link Parser – Supabase Edge Function
  *
  * Converts a raw URL into a structured option card.
- * This is ENAPO's technical wedge – the "wow moment".
+ * This is EPANO's technical wedge – the "wow moment".
  *
  * Flow: URL → fetch page → extract OG tags → domain heuristics → structured card
  * Critical rule: GRACEFUL DEGRADATION – always return a card, even if parsing fails.
@@ -160,7 +160,7 @@ serve(async (req: Request) => {
 
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; ENAPO/1.0; +https://enapo.app)',
+          'User-Agent': 'Mozilla/5.0 (compatible; EPANO/1.0; +https://epano.app)',
           'Accept': 'text/html',
         },
         signal: controller.signal,

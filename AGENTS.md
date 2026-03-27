@@ -2,7 +2,7 @@
 
 ## Project
 
-ENAPO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript. Backend: Supabase (PostgreSQL + Auth + Realtime + Edge Functions).
+EPANO is a mobile-first group travel planning app built with Expo, React Native, Expo Router, and TypeScript. Backend: Supabase (PostgreSQL + Auth + Realtime + Edge Functions).
 
 ## Mission
 

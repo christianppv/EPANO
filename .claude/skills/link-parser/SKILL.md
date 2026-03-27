@@ -1,9 +1,9 @@
 ---
 name: link-parser
-description: Implements or extends ENAPO's link parsing Edge Function. Use when working on URL-to-card conversion, domain-specific scrapers, or the parse-link Supabase Edge Function.
+description: Implements or extends EPANO's link parsing Edge Function. Use when working on URL-to-card conversion, domain-specific scrapers, or the parse-link Supabase Edge Function.
 ---
 
-Link parsing is ENAPO's technical wedge.
+Link parsing is EPANO's technical wedge.
 
 ## Architecture
 - Supabase Edge Function (Deno runtime)
