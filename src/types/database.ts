@@ -61,6 +61,10 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      create_trip: {
+        Args: { p_name: string; p_destination: string; p_date_from?: string | null; p_date_to?: string | null; p_planned_members?: number };
+        Returns: { id: string; name: string; destination: string; date_from: string | null; date_to: string | null; invite_code: string; created_by: string; status: string; planned_members: number; created_at: string }[];
+      };
       get_trip_by_invite_code: {
         Args: { p_code: string };
         Returns: { id: string; name: string; destination: string; status: string; invite_code: string }[];

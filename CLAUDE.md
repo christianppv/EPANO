@@ -392,6 +392,23 @@ npx tsc --noEmit            # Type check
 
 ---
 
+## Known Dev Limitations
+
+### Auth: Magic Link only (temporary)
+Google OAuth and Apple Sign-In require a Dev Build (Apple Developer Account, $99/year).
+Currently using Magic Link (email/password) as a temporary workaround for development.
+
+When Apple Developer Account is available:
+- Run `eas build --profile development --platform ios`
+- Re-add `signInWithGoogle` and `signInWithApple` in `features/auth/use-sign-in.ts`
+- Add Google OAuth client ID to app.config.ts
+- Add Apple Sign-In entitlement
+
+Do NOT attempt to fix Google/Apple OAuth in Expo Go — it is a known Expo Go limitation
+with WebCrypto that cannot be patched.
+
+---
+
 ## How to Work in This Repo
 
 1. Read this file first

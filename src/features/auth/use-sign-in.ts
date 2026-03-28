@@ -1,70 +1,47 @@
-import * as AppleAuthentication from 'expo-apple-authentication';
-import { makeRedirectUri } from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
-import { Platform } from 'react-native';
 import { supabase } from '@/lib/supabase';
-
-const redirectUri = makeRedirectUri({
-  scheme: 'epano',
-  path: 'auth/callback',
-});
 
 export function useSignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState('');
 
-  async function signInWithApple() {
+  async function sendOtp(inputEmail: string) {
     setError(null);
     setLoading(true);
     try {
-      const credential = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL,
-        ],
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: inputEmail.trim(),
+        options: { shouldCreateUser: true },
       });
-      if (!credential.identityToken) throw new Error('No identity token');
-      const { error: sbError } = await supabase.auth.signInWithIdToken({
-        provider: 'apple',
-        token: credential.identityToken,
-      });
-      if (sbError) throw sbError;
+      if (otpError) throw otpError;
+      setEmail(inputEmail.trim());
+      setSent(true);
     } catch (e: unknown) {
-      if ((e as { code?: string }).code !== 'ERR_REQUEST_CANCELED') {
-        setError('Apple Sign-In fehlgeschlagen. Bitte erneut versuchen.');
-      }
+      const msg = (e as { message?: string })?.message ?? String(e);
+      setError(`Fehler: ${msg}`);
     } finally {
       setLoading(false);
     }
   }
 
-  async function signInWithGoogle() {
+  async function verifyOtp(code: string) {
     setError(null);
     setLoading(true);
     try {
-      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: redirectUri,
-          skipBrowserRedirect: true,
-        },
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: code.trim(),
+        type: 'email',
       });
-      if (oauthError || !data.url) throw oauthError ?? new Error('No OAuth URL');
-
-      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUri);
-      if (result.type === 'success') {
-        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(result.url);
-        if (exchangeError) throw exchangeError;
-      }
+      if (verifyError) throw verifyError;
     } catch {
-      setError('Google Sign-In fehlgeschlagen. Bitte erneut versuchen.');
+      setError('Ungültiger Code. Bitte erneut versuchen.');
     } finally {
       setLoading(false);
     }
   }
 
-  const appleAvailable = Platform.OS === 'ios';
-
-  return { signInWithApple, signInWithGoogle, loading, error, appleAvailable };
+  return { sendOtp, verifyOtp, loading, error, sent };
 }

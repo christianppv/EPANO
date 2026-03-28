@@ -3,17 +3,15 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DatePickerField } from '@/components/ui/date-picker-field';
 import { LabeledInput } from '@/components/ui/labeled-input';
 import { MemberCountStepper } from '@/components/ui/member-count-stepper';
 import { useCreateTrip } from '@/features/trips/hooks/useCreateTrip';
-import { parseGermanDate } from '@/features/trips/utils/parse-date-input';
 import { colors, spacing, typography } from '@/theme';
 
 type FormErrors = {
   destination?: string;
   title?: string;
-  startDate?: string;
-  endDate?: string;
 };
 
 export default function CreateTripScreen() {
@@ -21,8 +19,8 @@ export default function CreateTripScreen() {
 
   const [destination, setDestination] = useState('');
   const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [memberCount, setMemberCount] = useState(2);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -37,12 +35,6 @@ export default function CreateTripScreen() {
     if (!title.trim()) {
       next.title = 'Bitte gib einen Reisenamen ein.';
     }
-    if (startDate.trim() && !parseGermanDate(startDate)) {
-      next.startDate = 'Format: TT.MM.JJJJ';
-    }
-    if (endDate.trim() && !parseGermanDate(endDate)) {
-      next.endDate = 'Format: TT.MM.JJJJ';
-    }
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -53,10 +45,11 @@ export default function CreateTripScreen() {
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const trip = await createTrip({ destination, title, startDate: startDate || undefined, endDate: endDate || undefined, memberCount });
+      const trip = await createTrip({ destination, title, startDate: startDate ?? undefined, endDate: endDate ?? undefined, memberCount });
       router.replace(`/trips/${trip.id}`);
-    } catch {
-      setSubmitError('Reise konnte nicht erstellt werden. Bitte erneut versuchen.');
+    } catch (e: unknown) {
+      const msg = (e as { message?: string })?.message ?? 'Unbekannter Fehler';
+      setSubmitError(`Fehler: ${msg}`);
       setSubmitting(false);
     }
   }
@@ -152,31 +145,20 @@ export default function CreateTripScreen() {
           >
             <View style={{ flexDirection: 'row', gap: spacing.sm }}>
               <View style={{ flex: 1 }}>
-                <LabeledInput
+                <DatePickerField
                   label="Von (optional)"
                   value={startDate}
-                  onChangeText={(v) => {
-                    setStartDate(v);
-                    if (errors.startDate) setErrors((e) => ({ ...e, startDate: undefined }));
-                  }}
-                  placeholder="01.07.2026"
-                  keyboardType="numbers-and-punctuation"
-                  returnKeyType="next"
-                  errorText={errors.startDate}
+                  onChange={setStartDate}
+                  placeholder="Datum wählen"
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <LabeledInput
+                <DatePickerField
                   label="Bis (optional)"
                   value={endDate}
-                  onChangeText={(v) => {
-                    setEndDate(v);
-                    if (errors.endDate) setErrors((e) => ({ ...e, endDate: undefined }));
-                  }}
-                  placeholder="07.07.2026"
-                  keyboardType="numbers-and-punctuation"
-                  returnKeyType="done"
-                  errorText={errors.endDate}
+                  onChange={setEndDate}
+                  placeholder="Datum wählen"
+                  minimumDate={startDate ? new Date(startDate) : undefined}
                 />
               </View>
             </View>
@@ -210,7 +192,7 @@ export default function CreateTripScreen() {
           <Pressable
             onPress={handleSubmit}
             style={({ pressed }) => ({
-              backgroundColor: submitting ? colors.textSecondary : colors.text,
+              backgroundColor: submitting ? colors.textMuted : colors.accent,
               paddingVertical: spacing.md,
               borderRadius: 14,
               alignItems: 'center',

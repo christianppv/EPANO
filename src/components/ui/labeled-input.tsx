@@ -29,7 +29,7 @@ export function LabeledInput({ label, errorText, style, ...props }: LabeledInput
             color: colors.text,
             backgroundColor: colors.white,
             borderWidth: 1,
-            borderColor: errorText ? '#EF4444' : colors.border,
+            borderColor: errorText ? '#EF4444' : '#C8C4BE',
             borderRadius: 10,
             paddingHorizontal: spacing.md,
             paddingVertical: spacing.sm + 4,

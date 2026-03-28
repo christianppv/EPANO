@@ -10,4 +10,5 @@ export type Trip = {
   status: TripStatus;
   inviteCode: string;
   accentColor: string;
+  members: string[];
 };

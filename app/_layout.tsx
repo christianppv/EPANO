@@ -1,11 +1,12 @@
+import '@/lib/polyfills';
+import { queryClient } from '@/lib/query-client';
+import { supabase } from '@/lib/supabase';
+import { useAuthStore } from '@/stores/use-auth-store';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { queryClient } from '@/lib/query-client';
-import { supabase } from '@/lib/supabase';
-import { useAuthStore } from '@/stores/use-auth-store';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -42,7 +43,13 @@ function AuthGate() {
     if (!session && !inAuth) {
       router.replace('/auth/login');
     } else if (session && (inAuth || atRoot)) {
-      router.replace('/trips');
+      supabase.from('profiles').select('name').eq('id', session.user.id).single().then(({ data }) => {
+        if (!data?.name) {
+          router.replace('/auth/setup');
+        } else {
+          router.replace('/trips');
+        }
+      });
     }
   }, [session, isLoading, segments]);
 

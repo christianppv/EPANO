@@ -17,5 +17,6 @@ export function dbTripToTrip(row: DbTrip): Trip {
     status: row.status as TripStatus,
     inviteCode: row.invite_code,
     accentColor: tripAccentColor(row.id),
+    members: [],
   };
 }

@@ -11,6 +11,7 @@ export const MOCK_TRIPS: Trip[] = [
     status: 'confirmed',
     inviteCode: 'mock0001',
     accentColor: '#4F46E5',
+    members: [],
   },
   {
     id: '2',
@@ -22,6 +23,7 @@ export const MOCK_TRIPS: Trip[] = [
     status: 'planning',
     inviteCode: 'mock0002',
     accentColor: '#F5A623',
+    members: [],
   },
   {
     id: '3',
@@ -33,5 +35,6 @@ export const MOCK_TRIPS: Trip[] = [
     status: 'planning',
     inviteCode: 'mock0003',
     accentColor: '#22C55E',
+    members: [],
   },
 ];
