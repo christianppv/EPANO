@@ -16,5 +16,5 @@ export const colors = {
   black: '#1A1A1A',
   statusPlanning: '#E8A94A',
   statusConfirmed: '#1A9E8F',
-  statusCompleted: '#9B9B9B',
+  statusCompleted: '#C4C0BA',
 } as const;

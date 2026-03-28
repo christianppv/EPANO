@@ -1,8 +1,12 @@
 import { Text, View } from 'react-native';
 
 const AVATAR_COLORS = [
-  '#1A9E8F', '#E8734A', '#E8A94A', '#4A90E8', '#9B59B6',
-  '#2ECC71', '#E74C3C', '#3498DB', '#F39C12', '#1ABC9C',
+  '#1A9E8F',
+  '#E8734A',
+  '#7B6FDE',
+  '#E8A94A',
+  '#DE6F8A',
+  '#4A90D9',
 ];
 
 function colorFromName(name: string): string {

@@ -1,13 +1,14 @@
-import { View } from 'react-native';
-import { colors } from '@/theme';
+import { Text, View } from 'react-native';
+import { colors, typography } from '@/theme';
 
 type Props = {
   decided: number;
   voting: number;
   total: number;
+  showLabel?: boolean;
 };
 
-export function ProgressDots({ decided, voting, total }: Props) {
+export function ProgressDots({ decided, voting, total, showLabel = false }: Props) {
   if (total === 0) return null;
 
   return (
@@ -23,6 +24,11 @@ export function ProgressDots({ decided, voting, total }: Props) {
           />
         );
       })}
+      {showLabel ? (
+        <Text style={{ ...typography.caption, color: colors.textMuted, marginLeft: 4 }}>
+          {decided}/{total} entschieden
+        </Text>
+      ) : null}
     </View>
   );
 }

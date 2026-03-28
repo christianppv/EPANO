@@ -17,6 +17,7 @@ ENAPO is a mobile-first collaborative group travel planning app built with Expo,
 This is an MVP following Build-Measure-Learn methodology. Every feature must map to a testable hypothesis. If a feature does not directly contribute to validating the core loop, it does not get built.
 
 **Core Loop (5 steps, must work in 90 seconds):**
+
 1. Create trip (< 10 seconds, 1-2 taps)
 2. Invite group (share link via WhatsApp/iMessage, no app install needed to join)
 3. Share links (paste URL → auto-parsed structured card in 1-2 seconds)
@@ -36,6 +37,7 @@ This is an MVP following Build-Measure-Learn methodology. Every feature must map
 Auth is minimal by design. Every extra step before the first Wow-Moment costs ~20–30% drop-off.
 
 ### Organizer (trip creator)
+
 - **Social Login only:** Apple Sign-In + Google Sign-In
 - No email/password, no confirmation email, no onboarding carousel
 - Name and avatar pulled automatically from the social account
@@ -56,6 +58,7 @@ Auth is minimal by design. Every extra step before the first Wow-Moment costs ~2
 That's the entire login screen. Nothing else.
 
 ### Invited member (joins via link)
+
 - Opens Web Invite URL in browser — **no app install required, no account required**
 - Single input screen: first name only, stored in browser/local session
 - No email, no password, no profile photo in v1
@@ -83,80 +86,130 @@ Every feature is evaluated against one question: **does it directly contribute t
 
 ### Sprint 1 — Trip & Invite (Weeks 6–7)
 
-| Feature | Why |
-|---|---|
-| Social Login (Google + Apple) | Persistent organizer identity — required for North Star tracking |
-| Name input for invited members | Social visibility in votes/options — core to group feel |
-| Trip creation (name + optional dates) | Entry point to the core loop |
-| Invite link generation + deep link handling | Growth loop start — must be measured from day 1 |
-| Web landing page for invite (Next.js) | Members join without app install |
-| Trip member list + realtime sync | Group awareness |
-| Trip list screen + Progress Dots | Orientation across trips |
+
+| Feature                                     | Why                                                              |
+| ------------------------------------------- | ---------------------------------------------------------------- |
+| Social Login (Google + Apple)               | Persistent organizer identity — required for North Star tracking |
+| Name input for invited members              | Social visibility in votes/options — core to group feel          |
+| Trip creation (name + optional dates)       | Entry point to the core loop                                     |
+| Invite link generation + deep link handling | Growth loop start — must be measured from day 1                  |
+| Web landing page for invite (Next.js)       | Members join without app install                                 |
+| Trip member list + realtime sync            | Group awareness                                                  |
+| Trip list screen + Progress Dots            | Orientation across trips                                         |
+
 
 ### Sprint 2 — Link Parsing & Options (Weeks 8–9)
 
-| Feature | Why |
-|---|---|
-| URL input field + Share Extension (iOS/Android) | Primary input mechanism |
-| Edge Function: OG-tag scraping | The Wow-Moment — link becomes structured card |
-| Option cards (title, image, price, domain, category) | Visual structure replaces chat chaos |
-| Auto-categorization (accommodation/flight/activity) | Instant smart grouping, no manual sorting |
-| Manual edit fallback (title, price, notes) | Graceful degradation — loop must never block |
-| Option list with type filters | Essential once a trip has 4+ options |
-| Thumbs Up / Down on option card | Low-friction inline reaction — not a replacement for polls |
-| Decision Board mini (in trip dashboard) | Progress feeling — "we're getting somewhere" |
-| Filter Pills (All / Accommodation / Flight / Activity) | Required for usability at scale |
+
+| Feature                                                | Why                                                        |
+| ------------------------------------------------------ | ---------------------------------------------------------- |
+| URL input field + Share Extension (iOS/Android)        | Primary input mechanism                                    |
+| Edge Function: OG-tag scraping                         | The Wow-Moment — link becomes structured card              |
+| Option cards (title, image, price, domain, category)   | Visual structure replaces chat chaos                       |
+| Auto-categorization (accommodation/flight/activity)    | Instant smart grouping, no manual sorting                  |
+| Manual edit fallback (title, price, notes)             | Graceful degradation — loop must never block               |
+| Option list with type filters                          | Essential once a trip has 4+ options                       |
+| Thumbs Up / Down on option card                        | Low-friction inline reaction — not a replacement for polls |
+| Decision Board mini (in trip dashboard)                | Progress feeling — "we're getting somewhere"               |
+| Filter Pills (All / Accommodation / Flight / Activity) | Required for usability at scale                            |
+
+
+
+## Sprint 2 — Entscheidungslog (Stand Phase 4)
+
+### Abgeschlossen
+- Edge Function parse-link deployed und getestet
+- option.types.ts + ParsedLinkResult (camelCase, sichere Defaults)
+- parse-link.ts Service mit Graceful Degradation
+- Airbnb-Rating-Extraktion via Regex aus og:title
+- useOptions (Query + Realtime) + useAddOption (Mutation)
+- Pill, OptionCard (Reanimated FadeUp), LinkInputSheet
+- added_by NOT NULL — Migration 20260328000000 auf Remote applied
+
+### Bewusste Design-Entscheidungen
+- LinkInputSheet: Variante A — kein Vorschau-Step.
+  URL → direkt speichern → Karte erscheint. Kein Bestätigungs-Button.
+- expo-linear-gradient nicht installiert →
+  #1A9E8F solid + shadowColor als Ersatz
+- FadeUp via Reanimated v4 (useSharedValue + withTiming)
+
+### Bekannte Einschränkungen (kein Blocker)
+- Booking.com + GetYourGuide blocken OG-Tags →
+  Karte erscheint mit Domain + Kategorie, manuell editierbar
+- Airbnb-Rating-Regex matcht max. eine Dezimalstelle —
+  /[⭐★](\d[,.]?\d{0,2})/ wäre robuster (post-MVP)
+
+### Offene Tickets vor Beta
+- Invite-Link von epano:// auf https://enapo.app/join/ umstellen
+  → BLOCKER für viralen Loop, muss vor Beta live sein
+- Web-Invite-Landing-Page (Next.js) — direkt nach Sprint 2
+
+### Phase 5 — noch offen
+- Filter Pills in app/trips/[id].tsx
+- FlatList mit OptionCard
+- FAB → öffnet LinkInputSheet
+- ProgressDots fix (total=3, decided aus options)
+- Trip bearbeiten (Name + Datum, Mini-Ticket)
+
 
 ### Sprint 3 — Voting & Decision Board (Weeks 10–11)
 
-| Feature | Why |
-|---|---|
-| Formal poll creation from existing options (1-tap) | The decision mechanism — core to North Star |
-| Vote interface (swipe or tap) | Completion of the core loop |
-| Live vote results (realtime) | Group feedback loop |
-| "Who has voted" + avatar stack | Social nudge without push notification |
-| Mark option as decided | The North Star event: `decision_made` |
-| Decision Board (Decided / Open / No proposals) | Trip status at a glance — no reconstruction needed |
-| Comments on options (not a trip chat) | Context for decisions — scoped, not a messenger |
-| Push notifications (new option, vote started, result) | Activates passive members |
+
+| Feature                                               | Why                                                |
+| ----------------------------------------------------- | -------------------------------------------------- |
+| Formal poll creation from existing options (1-tap)    | The decision mechanism — core to North Star        |
+| Vote interface (swipe or tap)                         | Completion of the core loop                        |
+| Live vote results (realtime)                          | Group feedback loop                                |
+| "Who has voted" + avatar stack                        | Social nudge without push notification             |
+| Mark option as decided                                | The North Star event: `decision_made`              |
+| Decision Board (Decided / Open / No proposals)        | Trip status at a glance — no reconstruction needed |
+| Comments on options (not a trip chat)                 | Context for decisions — scoped, not a messenger    |
+| Push notifications (new option, vote started, result) | Activates passive members                          |
+
 
 ### v1.1 — After Beta Signal
 
-| Feature | Condition |
-|---|---|
+
+| Feature                          | Condition                                                 |
+| -------------------------------- | --------------------------------------------------------- |
 | Poll deadline + auto-close logic | Only if passive member activation is insufficient in beta |
-| Nudge system (smart reminders) | Only if active participants/trip stays below 3 |
+| Nudge system (smart reminders)   | Only if active participants/trip stays below 3            |
+
 
 ### v2 — After PMF
 
-| Feature | Reason deferred |
-|---|---|
-| Full trip chat | ENAPO must not become a messenger. Group chats on WhatsApp anyway. Comments on options cover the context need. |
-| Cost splitting | Second product area. Splitwise exists and is excellent. |
-| Itinerary / day planner | Post-decision phase. Wanderlog covers this better. |
-| AI recommendations | Creates more options, not fewer. Does not solve the decision problem. |
-| Booking / checkout | Massive operational complexity before core is validated. |
-| Document hub | Post-decision, not essential for the wedge. |
-| Social / community features | Distraction from the collaborative core. |
+
+| Feature                     | Reason deferred                                                                                                |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Full trip chat              | ENAPO must not become a messenger. Group chats on WhatsApp anyway. Comments on options cover the context need. |
+| Cost splitting              | Second product area. Splitwise exists and is excellent.                                                        |
+| Itinerary / day planner     | Post-decision phase. Wanderlog covers this better.                                                             |
+| AI recommendations          | Creates more options, not fewer. Does not solve the decision problem.                                          |
+| Booking / checkout          | Massive operational complexity before core is validated.                                                       |
+| Document hub                | Post-decision, not essential for the wedge.                                                                    |
+| Social / community features | Distraction from the collaborative core.                                                                       |
+
 
 ---
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| Mobile App | React Native (Expo SDK 54), TypeScript, Expo Router |
-| Web (Invite Flow) | Next.js (React) — SSR, no app install needed for members |
-| Backend / API | Supabase (PostgreSQL + Auth + Realtime) |
-| Real-Time | Supabase Realtime (votes, options, decisions – all live) |
-| Link Parsing | Supabase Edge Function + OG-tag scraping |
-| State (global) | Zustand |
-| State (server) | TanStack Query (React Query) |
-| Animations | Reanimated + Gesture Handler |
-| Push Notifications | expo-notifications (later: OneSignal) |
-| Analytics | PostHog or Mixpanel (event-based) |
-| Monitoring | Sentry |
-| CI/CD | GitHub Actions + EAS Build |
+
+| Component          | Technology                                               |
+| ------------------ | -------------------------------------------------------- |
+| Mobile App         | React Native (Expo SDK 54), TypeScript, Expo Router      |
+| Web (Invite Flow)  | Next.js (React) — SSR, no app install needed for members |
+| Backend / API      | Supabase (PostgreSQL + Auth + Realtime)                  |
+| Real-Time          | Supabase Realtime (votes, options, decisions – all live) |
+| Link Parsing       | Supabase Edge Function + OG-tag scraping                 |
+| State (global)     | Zustand                                                  |
+| State (server)     | TanStack Query (React Query)                             |
+| Animations         | Reanimated + Gesture Handler                             |
+| Push Notifications | expo-notifications (later: OneSignal)                    |
+| Analytics          | PostHog or Mixpanel (event-based)                        |
+| Monitoring         | Sentry                                                   |
+| CI/CD              | GitHub Actions + EAS Build                               |
+
 
 ---
 
@@ -216,9 +269,65 @@ All tables use RLS. Only trip members can access trip data.
 
 ---
 
+## UI Design Vision (Decision-First)
+
+This section defines the UI north star for ENAPO.
+Goal: make group decisions feel faster, clearer, and more satisfying than WhatsApp chaos.
+
+### Core UX Intent
+
+- Every screen exists to move one group decision forward
+- ENAPO structures existing group behavior (sharing links, reacting, hesitating) instead of forcing new behavior
+- The first "wow moment" (link to structured option card) must happen within 90 seconds
+
+### Three Non-Negotiables
+
+1. Decision before information
+2. Structure behavior, do not retrain users
+3. One clear next action per screen (one primary CTA)
+
+### Emotional Target
+
+The product should feel like:
+
+- a tidy desk where everything has a place
+- an organized friend who keeps the overview
+- warm, optimistic travel momentum ("we are making progress")
+
+### Visual Direction
+
+- Liquid Glass with warm tones, never cold enterprise UI
+- Glass effects are for hierarchy, not decoration
+- Progress must always be visible (Progress Dots, Decision Board states, vote status)
+- Keep visual noise low: no dense dashboards, no feed-like overload
+
+### Interaction Principles
+
+- Inline actions over deep navigation (vote, filter, react directly in context)
+- Every important screen has loading, empty, and error states
+- Press states and feedback are mandatory for all interactive elements
+- Graceful degradation is required (especially for link parsing); the loop must never block
+
+### Anti-Patterns (Do Not Build)
+
+- KPI-heavy corporate dashboard layouts
+- infinite-scroll social feed patterns
+- booking-style filter overload and pricing matrix UI
+- generic, personality-free material-style interfaces
+
+### Quality Gate for Shipping Screens
+
+Before a screen is "done", confirm:
+
+- 5-second test: first-time users understand the purpose immediately
+- core loop is runnable without explanation: create -> invite -> share link -> vote -> decide
+- text hierarchy, spacing, colors, and glass levels follow ENAPO design tokens
+- the next action is unambiguous and visually primary
+
 ## Design System – Liquid Glass
 
 ### Colors
+
 - Primary: #1A9E8F (Teal), Accent/CTA: #E8734A (Coral)
 - Decided: #1A9E8F, Voting/Open: #E8A94A (Amber)
 - Background: #F0EDE8 (Warm off-white)
@@ -226,18 +335,21 @@ All tables use RLS. Only trip members can access trip data.
 - Text: #1A1A1A / #6B6B6B / #9B9B9B
 
 ### Glass Levels
+
 - Nav/Modals: opacity 0.7, blur 20px
 - Cards: opacity 0.55, blur 20px
 - Elevated: opacity 0.75, blur 24px
 - Accent (Decision Board): primary at 0.12, blur 16px
 
 ### Layout Rules
+
 - 4px grid, 16px screen padding, 16px card padding
 - Border-radius: 16px cards, 10px buttons, full-round avatars
 - Bottom nav: max 4 tabs (Trips | Options | Votes | Decisions)
 - Typography: heading 20/700, subtitle 15/600, body 13/400
 
 ### Key UX Screens (from design concept)
+
 - **Trip List:** Progress Dots per trip (green = decided, amber = voting, grey = empty) — always visible
 - **Trip Dashboard:** 3 tabs — Options (primary), Votes (secondary), Chat tab removed from v1
 - **Option Card:** Emoji icon + title + domain + price + rating + inline thumbs up/down for active options
@@ -264,16 +376,18 @@ Top 10 domains cover ~80% of links. Build heuristics for these first:
 
 ## Analytics Events (from Day 1, non-negotiable)
 
-| Event | What it measures |
-|---|---|
-| `trip_created` | Funnel entry |
-| `invite_sent` | Growth loop start |
-| `invite_accepted` | Invite acceptance rate |
-| `option_added` | Core activity #1 |
-| `poll_created` | Transition to decision |
-| `vote_cast` | Group engagement |
-| `decision_made` | **NORTH STAR** |
-| `booking_click` | Monetization funnel (post-v1) |
+
+| Event             | What it measures              |
+| ----------------- | ----------------------------- |
+| `trip_created`    | Funnel entry                  |
+| `invite_sent`     | Growth loop start             |
+| `invite_accepted` | Invite acceptance rate        |
+| `option_added`    | Core activity #1              |
+| `poll_created`    | Transition to decision        |
+| `vote_cast`       | Group engagement              |
+| `decision_made`   | **NORTH STAR**                |
+| `booking_click`   | Monetization funnel (post-v1) |
+
 
 No analytics setup = beta is worthless. Ship this before any beta user touches the app.
 
@@ -308,22 +422,26 @@ Expo-first always. Prefer Expo APIs and compatible packages. Do not introduce na
 
 ## Performance Targets
 
-| Action | Target |
-|---|---|
-| App start | < 1.5s |
-| Trip creation | < 10s |
-| Link parsing | < 2s |
+
+| Action                 | Target  |
+| ---------------------- | ------- |
+| App start              | < 1.5s  |
+| Trip creation          | < 10s   |
+| Link parsing           | < 2s    |
 | Vote update (realtime) | < 500ms |
+
 
 ---
 
 ## Sprint Reference
 
-| Sprint | Weeks | Deliverable | Gate |
-|--------|-------|-------------|------|
-| 1 | 6–7 | Social Login + Trip creation + Invite flow + Member name input | A member can join a trip via web link with name only, no app install |
-| 2 | 8–9 | Link parsing + Option cards + Filters + Decision Board mini | Paste a Booking.com link → structured card appears in < 2s |
-| 3 | 10–11 | Formal polls + Vote UI + "Who voted" + Decision marking + Comments on options + Push notifications | Complete core loop end-to-end: trip → link → vote → decision |
+
+| Sprint | Weeks | Deliverable                                                                                        | Gate                                                                 |
+| ------ | ----- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 1      | 6–7   | Social Login + Trip creation + Invite flow + Member name input                                     | A member can join a trip via web link with name only, no app install |
+| 2      | 8–9   | Link parsing + Option cards + Filters + Decision Board mini                                        | Paste a Booking.com link → structured card appears in < 2s           |
+| 3      | 10–11 | Formal polls + Vote UI + "Who voted" + Decision marking + Comments on options + Push notifications | Complete core loop end-to-end: trip → link → vote → decision         |
+
 
 ## Design Reference
 
@@ -331,13 +449,16 @@ The canonical UX reference is `docs/ux-reference/enapo-ux-concept.jsx`.
 Before building any screen or component, read this file first.
 All colors, glass effects, spacing, and component patterns are defined there.
 Do not invent styles — extract from the reference.
+
 ```
 
 **3. Design Tokens als eigene Datei extrahieren**
 
 Lass Claude Code als allererste Aufgabe die Tokens aus dem Entwurf extrahieren:
 ```
+
 src/constants/tokens.ts
+
 ```
 
 Das ist ein konkreter erster Prompt für Claude Code.
@@ -348,25 +469,30 @@ Das ist ein konkreter erster Prompt für Claude Code.
 
 **Schritt 1 — Tokens extrahieren:**
 ```
+
 Read docs/ux-reference/enapo-ux-concept.jsx and extract ALL design 
 tokens into src/constants/tokens.ts as a typed TypeScript object.
 Include: colors, glass levels (opacity + blur values), border-radius, 
 spacing, typography sizes and weights, shadow definitions.
 Every value must come from the reference file — no invented values.
+
 ```
 
 **Schritt 2 — GlassCard als erste Komponente:**
 ```
+
 Read docs/ux-reference/enapo-ux-concept.jsx.
 Implement the GlassCard component from the reference as a React Native 
 component in src/components/ui/glass-card.tsx.
 Use tokens from src/constants/tokens.ts.
 The component must accept: children, style override, onPress, hover state.
 Match the reference exactly: backdrop blur, border, shadow, border-radius.
+
 ```
 
 **Schritt 3 — Screen für Screen:**
 ```
+
 Read docs/ux-reference/enapo-ux-concept.jsx — specifically the 
 TripListScreen component.
 Implement this screen in app/(tabs)/index.tsx using React Native.
@@ -374,6 +500,7 @@ Use existing components from src/components/ui/.
 Match the layout exactly: greeting header, + button, trip cards with 
 ProgressDots and AvatarStack.
 Data is hardcoded for now — Supabase integration comes later.
+
 ```
 
 ---
@@ -395,10 +522,12 @@ npx tsc --noEmit            # Type check
 ## Known Dev Limitations
 
 ### Auth: Magic Link only (temporary)
+
 Google OAuth and Apple Sign-In require a Dev Build (Apple Developer Account, $99/year).
 Currently using Magic Link (email/password) as a temporary workaround for development.
 
 When Apple Developer Account is available:
+
 - Run `eas build --profile development --platform ios`
 - Re-add `signInWithGoogle` and `signInWithApple` in `features/auth/use-sign-in.ts`
 - Add Google OAuth client ID to app.config.ts
@@ -419,3 +548,4 @@ with WebCrypto that cannot be patched.
 6. Do not over-engineer
 7. Every PR references a hypothesis and a metric
 8. Update this file when architecture or product decisions change
+

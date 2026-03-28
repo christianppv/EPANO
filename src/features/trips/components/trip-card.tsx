@@ -5,7 +5,7 @@ import { AvatarStack } from '@/components/common/avatar-stack';
 import { ProgressDots } from '@/components/common/progress-dots';
 import { useTripMembers } from '../hooks/useTripMembers';
 import { colors, spacing, typography } from '@/theme';
-import { Trip, TripStatus } from '../types/trip.types';
+import { Trip } from '../types/trip.types';
 
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 
@@ -23,17 +23,22 @@ function formatDateRange(startDate: string, endDate: string): string {
   return `${startDay}. ${startMonth} – ${endDay}. ${endMonth} ${year}`;
 }
 
-const STATUS_LABEL: Record<TripStatus, string> = {
-  planning: 'Planung',
-  confirmed: 'Bestätigt',
-  completed: 'Abgeschlossen',
+type Progress = {
+  decided: number;
+  voting: number;
 };
 
-const STATUS_COLOR: Record<TripStatus, string> = {
-  planning: colors.statusPlanning,
-  confirmed: colors.statusConfirmed,
-  completed: colors.statusCompleted,
-};
+function progressFromTrip(trip: Trip): Progress {
+  const total = Math.max(trip.memberCount, 1);
+  if (trip.status === 'completed') {
+    return { decided: total, voting: 0 };
+  }
+  if (trip.status === 'confirmed') {
+    const decided = Math.max(1, Math.min(total - 1, Math.ceil(total * 0.5)));
+    return { decided, voting: total > decided ? 1 : 0 };
+  }
+  return { decided: 0, voting: Math.min(total, 1) };
+}
 
 type TripCardProps = {
   trip: Trip;
@@ -43,44 +48,42 @@ type TripCardProps = {
 export function TripCard({ trip, onPress }: TripCardProps) {
   const { members } = useTripMembers(trip.id);
   const memberNames = members.map((m) => m.name);
+  const progress = progressFromTrip(trip);
 
   return (
-    <GlassCard onPress={onPress} style={{ overflow: 'hidden' }}>
+    <GlassCard onPress={onPress} style={{ padding: spacing.md }}>
       {/* Left accent stripe */}
       <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, backgroundColor: trip.accentColor }} />
 
-      <View style={{ paddingLeft: spacing.md + 4, paddingRight: spacing.md, paddingVertical: spacing.md }}>
-        {/* Top row: destination + status badge */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Text style={{ ...typography.heading, color: colors.text, flex: 1, marginRight: spacing.sm }}>
-            {trip.destination}
-          </Text>
-          <View style={{ backgroundColor: STATUS_COLOR[trip.status] + '20', paddingHorizontal: spacing.sm, paddingVertical: 3, borderRadius: 20 }}>
-            <Text style={{ ...typography.caption, fontWeight: '600', color: STATUS_COLOR[trip.status] }}>
-              {STATUS_LABEL[trip.status]}
+      <View style={{ paddingLeft: spacing.sm }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: spacing.sm }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ ...typography.subheading, color: colors.text, fontSize: 17, lineHeight: 24 }} numberOfLines={1}>
+              {trip.title}
+            </Text>
+            <Text style={{ ...typography.caption, color: colors.textMuted, marginTop: 2 }} numberOfLines={1}>
+              {trip.destination}
             </Text>
           </View>
+          <AvatarStack names={memberNames} size={26} max={4} />
         </View>
 
-        {/* Trip title */}
-        <Text style={{ ...typography.body, color: colors.textSecondary, marginTop: 2 }}>
-          {trip.title}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.sm }}>
+          {trip.startDate && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name="calendar-outline" size={12} color={colors.textMuted} />
+              <Text style={{ ...typography.caption, color: colors.textMuted }}>
+                {formatDateRange(trip.startDate, trip.endDate)}
+              </Text>
+            </View>
+          )}
+          <Text style={{ ...typography.caption, color: colors.textMuted }}>
+            · {trip.memberCount} Personen
+          </Text>
+        </View>
 
-        {/* Date row */}
-        {trip.startDate && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: spacing.sm }}>
-            <Ionicons name="calendar-outline" size={12} color={colors.textMuted} />
-            <Text style={{ ...typography.caption, color: colors.textMuted }}>
-              {formatDateRange(trip.startDate, trip.endDate)}
-            </Text>
-          </View>
-        )}
-
-        {/* Bottom row: progress dots + avatar stack */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.sm }}>
-          <ProgressDots decided={0} voting={0} total={Math.min(trip.memberCount, 8)} />
-          <AvatarStack names={memberNames} size={24} max={4} />
+        <View style={{ marginTop: spacing.sm + 2 }}>
+          <ProgressDots decided={progress.decided} voting={progress.voting} total={Math.min(Math.max(trip.memberCount, 1), 8)} showLabel />
         </View>
       </View>
     </GlassCard>
